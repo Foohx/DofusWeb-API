@@ -29,7 +29,7 @@ DofusWeb API requiert au minimum PHP `v5.4+`.
 Récupérer les sources de la librairie :
 
 ```bash
-$ git clone http:// 
+$ git clone https://github.com/Foohx/DofusWeb-API.git
 ```
 
 Puis l'inclure dans vos scripts :
@@ -38,7 +38,7 @@ Puis l'inclure dans vos scripts :
 require_once '/path/to/lib/dofuswebapi.class.php';
 ```
 
-### Initialiser de la class
+### Initialisation de la class
 
 Pour s'initialiser DofusWeb API à besoin de deux chaines de caractère. La première étant le nom de compte et la seconde étant le mot de passe.
 
@@ -49,7 +49,7 @@ $hDofus = new DofusWeb_API('username', 'password');
 Il faut ensuite définir un fichier qui va permettre de conserver la connexion au site :
 
 ```php
-$hDofus->setCookie('./temp.txt')
+$hDofus->setCookie('/path/to/file/for/cookie.txt')
 ```
 
 Voilà ! Vous êtes maintenant prêt pour partir à la chasse aux informations. 

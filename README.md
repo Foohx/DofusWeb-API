@@ -23,8 +23,10 @@ DofusWeb API est une petite librairie non officiel vous permettant d'intéragir 
 
 ---
 
-### Installation depuis GitHub
+# Installation
 DofusWeb API requiert au minimum PHP `v5.4+`.
+
+### Github
 
 Récupérer les sources de la librairie :
 
@@ -38,7 +40,9 @@ Puis l'inclure dans vos scripts :
 require_once '/path/to/lib/dofuswebapi.class.php';
 ```
 
-### Initialisation de la class
+# Utilisation
+
+### Initialiser la class
 
 Pour s'initialiser DofusWeb API à besoin de deux chaines de caractère. La première étant le nom de compte et la seconde étant le mot de passe.
 
@@ -54,7 +58,7 @@ $hDofus->setCookie('/path/to/file/for/cookie.txt')
 
 Voilà ! Vous êtes maintenant prêt pour partir à la chasse aux informations. 
 
-### Collecte sur Dofus.com
+### Collecter des informations sur Dofus.com
 
 Connexion au compte avec les identifiants précédents :
 
@@ -123,7 +127,7 @@ Une fois que vous en avez terminé avec les requêtes vous pouvez clore votre se
 $hDofus->reqAnkamaLogout();
 ```
 
-### Collecte sur Ankama.com
+### Collecter des informations sur Ankama.com
 
 ```php
 $hDofus->reqAnkamaLogin();
@@ -152,11 +156,42 @@ array(
 );
 ```
 
-Petit exemple :
+Exemple :
 
 ```php
 echo "Bonjour Mr. " . $hDofus->dataAccount['account']['lastname'] . "<br />";
 echo "Votre email de contact : " . $hDofus->dataAccount['account']['email'] . "<br />";
+
 if ($hDofus->dataAccount['security'] == 3)
 	echo "Votre compte est protégé par le SHIELD !";
 ```
+
+# Class
+
+### Attributs
+
+`body` - Contient le code source de la dernière requête effectué
+`code` - Code HTTP de la dernière requête
+`dataAccount` - Informations extraites du site account.ankama.com
+`dataDofus` -	Informations extraite du site dofus.com
+`errors` - Contient une liste d'erreurs (array)
+
+### Fonctions
+
+* Toutes ces fonctions retournent `true` en cas de succès ou `false` en cas d'échec. 
+* Les fonctions débutant par `req` effectuent des requêtes HTTP et retourne des informations dans `body` et `code`.
+* En cas de problèmes / d'erreurs des détails sont disponible dans l'attribut `errors`
+
+`askIsConnected($reload=false)` - Vérifie que l'utilisateur est connecté
+`collectAnkamaData()` - Récupère des informations et le stock dans `dataAccount`
+`collectDofusData()` - Récupère des informations et le stock dans `dataDofus`
+`setCookie($path_to_file)` - Indique dans quel fichier stocker les cookies
+`setLogin($username, $password)` - Permet de changer les identifiants de connexion
+`getCookie()` - Récupère le nom du fichier de cookie courant
+`getLogin()` - Récupère les identifiants de connexion de la class
+`reqAnkamaHome()` - Execute une requête `GET` sur la page d'accueil d'Ankama
+`reqAnkamaLogin()` - Execute une requête `POST` afin de s'identifier sur Ankama
+`reqAnkamaLogout()` - Execute une requête `GET` afin de se déconnecter d'Ankama
+`reqDofusHome()` - Execute une requête `GET` sur la page d'accueil de Dofus
+`reqDofusLogin()` - Execute une requête `POST` afin de s'identifier sur Dofus
+`reqDofusLogout()` - Execute une requête `GET` afin de se déconnecter de Dofus

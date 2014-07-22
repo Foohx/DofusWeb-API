@@ -171,9 +171,13 @@ if ($hDofus->dataAccount['security'] == 3)
 ### Attributs
 
 `body` - Contient le code source de la dernière requête effectué
+
 `code` - Code HTTP de la dernière requête
+
 `dataAccount` - Informations extraites du site account.ankama.com
+
 `dataDofus` -	Informations extraite du site dofus.com
+
 `errors` - Contient une liste d'erreurs (array)
 
 ### Fonctions
@@ -183,15 +187,27 @@ if ($hDofus->dataAccount['security'] == 3)
 * En cas de problèmes / d'erreurs des détails sont disponible dans l'attribut `errors`
 
 `askIsConnected($reload=false)` - Vérifie que l'utilisateur est connecté
+
 `collectAnkamaData()` - Récupère des informations et le stock dans `dataAccount`
+
 `collectDofusData()` - Récupère des informations et le stock dans `dataDofus`
+
 `setCookie($path_to_file)` - Indique dans quel fichier stocker les cookies
+
 `setLogin($username, $password)` - Permet de changer les identifiants de connexion
+
 `getCookie()` - Récupère le nom du fichier de cookie courant
+
 `getLogin()` - Récupère les identifiants de connexion de la class
+
 `reqAnkamaHome()` - Execute une requête `GET` sur la page d'accueil d'Ankama
+
 `reqAnkamaLogin()` - Execute une requête `POST` afin de s'identifier sur Ankama
+
 `reqAnkamaLogout()` - Execute une requête `GET` afin de se déconnecter d'Ankama
+
 `reqDofusHome()` - Execute une requête `GET` sur la page d'accueil de Dofus
+
 `reqDofusLogin()` - Execute une requête `POST` afin de s'identifier sur Dofus
+
 `reqDofusLogout()` - Execute une requête `GET` afin de se déconnecter de Dofus

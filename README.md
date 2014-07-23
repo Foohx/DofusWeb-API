@@ -1,6 +1,6 @@
 # DofusWeb API
 
-DofusWeb API est une petite librairie non officiel vous permettant d'intéragir avec les services web de la société Ankama.
+DofusWeb API est une petite librairie HTTP non officiel vous permettant d'intéragir avec les services web de la société Ankama.
 
 * Connexion/Déconnexion sur [dofus.com](http://dofus.com/fr)
 * Récupération du Pseudo

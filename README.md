@@ -78,7 +78,7 @@ Vous pouvez accéder aux informations collecté via l'attribut `$dataDofus`. Cet
 array(
 	'account' => array(
 		'nickname' 			=> 'Pseudo-Forum',
-		'subscription' 		=> 'Abonné', // Ou 'Non Abonné'
+		'subscription' 		=> true/false,
 		'subs_expiration' 	=> 'JJ/MM/AAAA',
 		'ogrines' 			=> 1337,
 		'kroz' 				=> 137,
@@ -111,14 +111,27 @@ array(
 Pour les néophytes le tableau s'utilise ainsi :
 
 ```php
-echo "Ogrines : " . $dataDofus['account']['ogrines'] . "<br />";
-echo "Kroz : " . $dataDofus['account']['kroz'] . "<br />";
+echo "Ogrines : " . $hDofus->dataDofus['account']['ogrines'] . "<br />";
+echo "Kroz : " . $hDofus->dataDofus['account']['kroz'] . "<br />";
 // ...
-echo "Perso 1 : " . $dataDofus['characters'][0]['name'] . "<br />";
-echo "Niveau : " . $dataDofus['characters'][0]['level'] . "<br />";
-echo "Perso 2 : " . $dataDofus['characters'][1]['name'] . "<br />";
-echo "Niveau : " . $dataDofus['characters'][1]['level'] . "<br />";
+echo "Perso 1 : " . $hDofus->dataDofus['characters'][0]['name'] . "<br />";
+echo "Niveau : " . $hDofus->dataDofus['characters'][0]['level'] . "<br />";
+echo "Perso 2 : " . $hDofus->dataDofus['characters'][1]['name'] . "<br />";
+echo "Niveau : " . $hDofus->dataDofus['characters'][1]['level'] . "<br />";
 // etc...
+```
+
+Si vous voulez lister tous les personnages ou compter combien le compte en possède :
+
+```php
+$nombrePersonnages = count($hDofus->dataDofus['characters']);
+for ($i=0; $i < $nombrePersonnages; $i++)
+{
+	echo "Race : " . $hDofus->dataDofus['characters'][$i]['class'] . "<br />";
+	echo "Nom : " . $hDofus->dataDofus['characters'][$i]['name'] . "<br />";
+	echo "Niveau : " . $hDofus->dataDofus['characters'][$i]['level'] . "<br />";
+	echo "Serveur : " . $hDofus->dataDofus['characters'][$i]['server'] . "<br /><br />";
+}
 ```
 
 Une fois que vous en avez terminé avec les requêtes vous pouvez clore votre session en vous déconnectant :

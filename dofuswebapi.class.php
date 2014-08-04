@@ -339,7 +339,13 @@ class DofusWeb_API
 			$r_array['nickname'] = NULL;
 		// Read Subscription
 		if (preg_match('#subscribe">(.*?)<span class="ak-infos-title">DOFUS</span>#s', $this->body, $matches))
+		{
 			$r_array['subscription'] = trim(html_entity_decode($matches[1]));
+			if (preg_match('#^Non Abo#', $r_array['subscription']))
+				$r_array['subscription'] = false;
+			else
+				$r_array['subscription'] = true;
+		}
 		else
 			$r_array['subscription'] = NULL;
 		if (preg_match('#<span class="ak-infos-small">jusqu\'au (.*?)</span>#', $this->body, $matches))

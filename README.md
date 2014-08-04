@@ -24,7 +24,7 @@ DofusWeb API est une petite librairie HTTP non officiel vous permettant d'intér
 ---
 
 # Installation
-DofusWeb API requiert au minimum PHP `v5.4+`.
+DofusWeb API requiert au minimum PHP `v5.4+` ainsi que l'extension `CURL`.
 
 ### Github
 

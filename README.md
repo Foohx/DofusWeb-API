@@ -112,6 +112,49 @@ array(
 );
 ```
 
+Il est désormais possible de récupérer les Kamas (montant disponible par serveur) en bourse à l'aide de la fonction :
+
+```php
+$hDofus->collectDofusData_Bourse();
+```
+
+L'appel précédent doit être fait uniquement après un `$hDofus->collectDofusData();` !
+Ainsi l'attribut `$dataDofus` se verra modifier de la sorte :
+
+```php
+array(
+	'account' => array(
+		'nickname' 			=> 'Pseudo-Forum',
+		'subscription' 		=> true/false,
+		'subs_expiration' 	=> 'JJ/MM/AAAA',
+		'ogrines' 			=> 1337,
+		'kroz' 				=> 137,
+		'ankabox' 			=> 0,
+	),
+	'characters' => array(
+		array(
+			'class'			=> 'Zobal',
+			'level'			=> 10,
+			'name' 			=> 'NomPerso 1',
+			'server'		=> 'NomDuServeur'
+		)
+		// etc..
+	),
+	'bourse' => array( 
+    	array(
+        	'server' 		=> 'Helsephine'
+        	'kamas' 		=> 851638
+    	),
+        array(
+        	'server' 		=> 'Hyrkul'
+        	'kamas' 		=> 0
+    	)
+        // etc..
+    )	
+);
+```
+
+
 Pour les néophytes le tableau s'utilise ainsi :
 
 ```php

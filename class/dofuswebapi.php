@@ -78,7 +78,7 @@ class DofusWeb_API
 	{
 		$this->errors = array();
 		// Request
-		
+
 		// Connected ?
 		if (!$this->askIsConnected())
 		{
@@ -127,6 +127,18 @@ class DofusWeb_API
 	public function getLogin()
 	{
 		return $this->_login;
+	}
+
+	public function reqOther($url)
+	{
+		$ret = $this->_doRequest(array(
+			'url' 		=> $url,
+			'type' 		=> 'GET',
+			'cookie' 	=> $this->_cookie
+		));
+		if (!$ret || $this->code != 200)
+			return false;
+		return true;
 	}
 
 	public function reqAnkamaHome()

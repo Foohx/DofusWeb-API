@@ -74,6 +74,23 @@ class DofusWeb_API
 		return true;
 	}
 
+	public function collectDofusData_Bourse()
+	{
+		$this->errors = array();
+		// Request
+		
+		// Connected ?
+		if (!$this->askIsConnected())
+		{
+			$this->errors[] = "Not connected !";
+			return false;
+		}
+		// I Parse
+
+		// O Parse
+		return true;		
+	}
+
 	public function setCookie($path_to_file)
 	{
 		$this->errors = array();

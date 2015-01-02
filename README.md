@@ -41,7 +41,7 @@ $ git clone https://github.com/Foohx/DofusWeb-API.git
 Puis l'inclure dans vos scripts :
 
 ```bash
-require_once '/path/to/lib/dofuswebapi.class.php';
+require_once '/path/to/lib/dofuswebapi.php';
 ```
 
 # Utilisation

@@ -76,19 +76,32 @@ class DofusWeb_API
 
 	public function collectDofusData_Bourse()
 	{
+		if (!is_array($this->dataDofus)) return false;
 		$this->errors = array();
 		// Request
-
+		$r = $this->reqOther('https://secure.dofus.com/fr/achat-bourses-kamas-ogrines/selection-serveur');
 		// Connected ?
-		if (!$this->askIsConnected())
+		if (!$r && !$this->askIsConnected())
 		{
 			$this->errors[] = "Not connected !";
 			return false;
 		}
 		// I Parse
-
+		$this->body = str_replace("\n", "", $this->body);
+		if (preg_match_all('#<span class="ak-name">([A-Za-z- ]+)?<\/span>.*?ak-nb-kamas">([0-9 ]+)<img#m', $this->body, $m))
+		{
+			if (!isset($m[1]) && !isset($m[2])) return false;
+			$this->dataDofus['bourse'] = array();
+			for ($i=0; $i < count($m[1]); $i++) { 
+				$this->dataDofus['bourse'][] = array(
+					'server' 	=> $m[1][$i],
+					'kamas' 	=> intval(str_replace(" ", "", $m[2][$i]))
+				);
+			}
+			return true;
+		}
 		// O Parse
-		return true;		
+		return false;		
 	}
 
 	public function setCookie($path_to_file)

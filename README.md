@@ -230,7 +230,8 @@ if ($hDofus->dataAccount['security'] == 3)
 
 Si vous souhaitez accéder à la bourse aux Kamas et que votre compte possède le SHIELD d'activé, il est possible de passer outre !
 
-Dans un premier temps, on essaye d'accéder normalement à la bourse, si la fonction `collectDofusData_Bourse()` nous informe dans les `errors` qu'une protection SHIELD est présente, alors on demande un code par email :
+Dans un premier temps, on essaye d'accéder normalement à la bourse.
+Si la fonction `collectDofusData_Bourse()` nous informe dans les `errors` qu'une protection SHIELD est présente, alors on demande un code par email :
 
 ```php
 $hDofus = new DofusWeb_API('username', 'password');
@@ -246,7 +247,8 @@ if ($r == False && in_array('Protected by shield !', $hDofus->errors)){
 }
 ```
 
-Une fois le code reçu dans votre boite, il ne faut pas vous reconnecter comme habituellement. Le fichier de cookie permet de conserver votre SESSION et donc de rester connecter. De plus aucune requête ne doit être effectué avant l'envoie du code.
+Une fois le code reçu dans votre boite, il ne faut pas vous reconnecter comme habituellement. Le fichier de cookie permet de conserver votre SESSION et donc de rester connecté. De plus aucune requête ne doit être effectuée avant la validation du code.
+
 Dans le code suivant, on ajoute donc l'option `false` en second paramètres à setCookie(), ceci aura pour effet de ne pas générer une nouvelle connexion !
 
 ```php

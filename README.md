@@ -23,7 +23,7 @@ DofusWeb API est une petite librairie HTTP non officiel vous permettant d'intér
 
 ---
 
-**Important**: Merci de respecter vos utilisateurs et de ne pas récupérer d'informations sans leur accord préalable !!! 
+**Important**: Merci de respecter vos utilisateurs et de ne pas récupérer d'informations sans leur accord préalable !!!
 
 ---
 
@@ -60,7 +60,7 @@ Il faut ensuite définir un fichier qui va permettre de conserver la connexion a
 $hDofus->setCookie('/path/to/file/for/cookie.txt')
 ```
 
-Voilà ! Vous êtes maintenant prêt pour partir à la chasse aux informations. 
+Voilà ! Vous êtes maintenant prêt pour partir à la chasse aux informations.
 
 ### Collecter des informations sur Dofus.com
 
@@ -140,7 +140,7 @@ array(
 		)
 		// etc..
 	),
-	'bourse' => array( 
+	'bourse' => array(
     	array(
         	'server' 		=> 'Helsephine'
         	'kamas' 		=> 851638
@@ -150,7 +150,7 @@ array(
         	'kamas' 		=> 0
     	)
         // etc..
-    )	
+    )
 );
 ```
 
@@ -226,6 +226,47 @@ if ($hDofus->dataAccount['security'] == 3)
 	echo "Votre compte est protégé par le SHIELD !";
 ```
 
+### Bourse aux Kamas / Ankama SHIELD
+
+Si vous souhaitez accéder à la bourse aux Kamas et que votre compte possède le SHIELD d'activé, il est possible de passer outre !
+
+Dans un premier temps, on essaye d'accéder normalement à la bourse, si la fonction `collectDofusData_Bourse()` nous informe dans les `errors` qu'une protection SHIELD est présente, alors on demande un code par email :
+
+```php
+$hDofus = new DofusWeb_API('username', 'password');
+
+$hDofus->setCookie('cookie.txt');
+
+$r = $hDofus->reqDofusLogin();
+$hDofus->collectDofusData();
+$r = $hDofus->collectDofusData_Bourse();
+if ($r == False && in_array('Protected by shield !', $hDofus->errors)){
+    print("SHIELD detected !\n");
+    $hDofus->ShieldCode(); // Demande du code par mail pour dévérouiller le SHIELD
+}
+```
+
+Une fois le code reçu dans votre boite, il ne faut pas vous reconnecter comme habituellement. Le fichier de cookie permet de conserver votre SESSION et donc de rester connecter. De plus aucune requête ne doit être effectué avant l'envoie du code.
+Dans le code suivant, on ajoute donc l'option `false` en second paramètres à setCookie(), ceci aura pour effet de ne pas générer une nouvelle connexion !
+
+```php
+$hDofus = new DofusWeb_API('username', 'password');
+
+$hDofus->setCookie('cookie.txt', false); // On souhaite conserver notre cookie précédent, d'ou le false ici !
+
+$hDofus->ShieldValidate("V8TUST"); // V8TUST est le code reçu précédemment par mail
+$hDofus->collectDofusData();
+$r = $hDofus->collectDofusData_Bourse();
+if ($r == False && in_array('Protected by shield !', $hDofus->errors)){
+    print("SHIELD detected !\n");
+    $hDofus->ShieldCode();
+} else {
+    print("No SHIELD detected !\n");
+}
+```
+
+Ajouté suite à une demande de [@Reptiluka](https://twitter.com/Reptiluka)
+
 # Class
 
 ### Attributs
@@ -243,6 +284,7 @@ Toutes ces fonctions retournent `true` en cas de succès ou `false` en cas d'éc
 * `askIsConnected($reload=false)` - Vérifie que l'utilisateur est connecté
 * `collectAnkamaData()` - Récupère des informations et le stock dans `dataAccount`
 * `collectDofusData()` - Récupère des informations et le stock dans `dataDofus`
+* `collectDofusData_Bourse()` - Récupère des informations de la bourse aux Kamas (un appel à `collectDofusData()` est necéssaire avant !)
 * `setCookie($path_to_file)` - Indique dans quel fichier stocker les cookies
 * `setLogin($username, $password)` - Permet de changer les identifiants de connexion
 * `getCookie()` - Récupère le nom du fichier de cookie courant
@@ -253,3 +295,5 @@ Toutes ces fonctions retournent `true` en cas de succès ou `false` en cas d'éc
 * `reqDofusHome()` - Execute une requête `GET` sur la page d'accueil de Dofus
 * `reqDofusLogin()` - Execute une requête `POST` afin de s'identifier sur Dofus
 * `reqDofusLogout()` - Execute une requête `GET` afin de se déconnecter de Dofus
+* `ShieldCode()` - Envoi un `mail` contenant un `code` pour dévérouiller le SHIELD
+* `ShieldValidate($code)` - Valide le `code` reçu par `mail` grâce à la fonction `ShieldCode()`

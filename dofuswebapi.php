@@ -9,7 +9,7 @@ class DofusWeb_API
 	public 	$body;
 	public 	$code;
 	public 	$dataAccount;
-	public 	$dataDofus;	
+	public 	$dataDofus;
 	public 	$errors;
 	private $_cookie;
 	private $_login;
@@ -51,7 +51,7 @@ class DofusWeb_API
 		if (($r = $this->_askAnkamaAccess()) == self::ACCESS_FAIL)
 		{
 			$this->errors[] = "Not connected !";
-			return false;			
+			return false;
 		}
 		$this->dataAccount['security'] = $r;
 		if ($r != self::ACCESS_DONE)
@@ -74,6 +74,34 @@ class DofusWeb_API
 		return true;
 	}
 
+	public function ShieldCode()
+	{
+		$r = $this->reqOther('https://account.ankama.com/fr/securite/mode-restreint?f=https://secure.dofus.com/fr/achat-bourses-kamas-ogrines/selection-serveur');
+		$r = $this->_doRequest(array(
+			'url' 		=> 'https://account.ankama.com/fr/securite/mode-restreint?f=https://secure.dofus.com/fr/achat-bourses-kamas-ogrines/selection-serveur',
+			'type' 		=> 'POST',
+			'fields' 	=> array(
+				'step' 	=> 2
+			),
+			'cookie' 	=> $this->_cookie
+		));
+	}
+
+	public function ShieldValidate($code, $name="API")
+	{
+		$r = $this->_doRequest(array(
+			'url' 		=> 'https://account.ankama.com/fr/securite/mode-restreint?f=https://secure.dofus.com/fr/achat-bourses-kamas-ogrines/selection-serveur',
+			'type' 		=> 'POST',
+			'fields' 	=> array(
+				'step' 	=> 3,
+				'security_code' => $code,
+				'security_browser' => $name
+			),
+			'cookie' 	=> $this->_cookie
+		));
+		$r = $this->reqOther('https://secure.dofus.com/fr/achat-bourses-kamas-ogrines/selection-serveur');
+	}
+
 	public function collectDofusData_Bourse()
 	{
 		if (!is_array($this->dataDofus)) return false;
@@ -86,13 +114,19 @@ class DofusWeb_API
 			$this->errors[] = "Not connected !";
 			return false;
 		}
-		// I Parse
 		$this->body = str_replace("\n", "", $this->body);
+		// Shield ?
+		if (preg_match_all('#shield#m', $this->body, $m)){
+			$this->errors = array();
+			$this->errors[] = "Protected by shield !";
+			return false;
+		}
+		// I Parse
 		if (preg_match_all('#<span class="ak-name">([A-Za-z- ]+)?<\/span>.*?ak-nb-kamas">([0-9 ]+)<img#m', $this->body, $m))
 		{
 			if (!isset($m[1]) && !isset($m[2])) return false;
 			$this->dataDofus['bourse'] = array();
-			for ($i=0; $i < count($m[1]); $i++) { 
+			for ($i=0; $i < count($m[1]); $i++) {
 				$this->dataDofus['bourse'][] = array(
 					'server' 	=> $m[1][$i],
 					'kamas' 	=> intval(str_replace(" ", "", $m[2][$i]))
@@ -101,18 +135,20 @@ class DofusWeb_API
 			return true;
 		}
 		// O Parse
-		return false;		
+		return false;
 	}
 
-	public function setCookie($path_to_file)
+	public function setCookie($path_to_file, $new=True)
 	{
 		$this->errors = array();
 		$this->_cookie = $path_to_file;
-		if (@file_put_contents($this->_cookie, "") === false)
-		{
-			$this->errors[] = "Can't create a cookie file.";
-			$this->_cookie = NULL;
-			return false;
+		if ($new) {
+			if (@file_put_contents($this->_cookie, "") === false)
+			{
+				$this->errors[] = "Can't create a cookie file.";
+				$this->_cookie = NULL;
+				return false;
+			}
 		}
 		return true;
 	}
@@ -127,11 +163,11 @@ class DofusWeb_API
 		}
 		$this->_login = array(
 			'user' => $username,
-			'pass' => $password 
+			'pass' => $password
 		);
 		return true;
 	}
-	
+
 	public function getCookie()
 	{
 		return $this->_cookie;
@@ -173,7 +209,7 @@ class DofusWeb_API
 			'type' 		=> 'POST',
 			'fields' 	=> array(
 				'action' 	=> "login",
-				'from' 	 	=> "https://account.ankama.com/fr/votre-compte/profil",
+				'from' 	 	=> "https://account.ankama.com/fr/profil/informations",
 				'postback'	=> 1,
 				'login'  	=> $this->_login['user'],
 				'password' 	=> $this->_login['pass']
@@ -296,9 +332,9 @@ class DofusWeb_API
 			$options['useragent'] = "Mozilla 5.0";
 		$hc = curl_init($options['url']);
 		curl_setopt($hc, CURLOPT_FRESH_CONNECT, true);
-		curl_setopt($hc, CURLOPT_SSL_VERIFYPEER, false); 
-		curl_setopt($hc, CURLOPT_SSL_VERIFYHOST, 0); 
-		curl_setopt($hc, CURLOPT_FOLLOWLOCATION, true); 
+		curl_setopt($hc, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($hc, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($hc, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($hc, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($hc, CURLOPT_COOKIEJAR, realpath($options['cookie']));
 		curl_setopt($hc, CURLOPT_COOKIEFILE, realpath($options['cookie']));
@@ -310,7 +346,7 @@ class DofusWeb_API
 		}
 		if (($this->body = utf8_decode(curl_exec($hc))) === false)
 			$this->errors[] = curl_error($hc);
-		$this->code = curl_getinfo($hc, CURLINFO_HTTP_CODE); 
+		$this->code = curl_getinfo($hc, CURLINFO_HTTP_CODE);
 		curl_close($hc);
 		return true;
 	}
@@ -457,5 +493,5 @@ class DofusWeb_API
 		}
 		return true;
 	}
-	*/	
+	*/
 }
